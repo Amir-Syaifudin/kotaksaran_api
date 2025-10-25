@@ -22,7 +22,7 @@ import java.net.URI;
 
 /**
  * Controller untuk Modul Autentikasi (Publik).
- * Sesuai BAB 1.2, endpoint ini harus bisa diakses tanpa token.
+ * endpoint ini harus bisa diakses tanpa token.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -44,15 +44,10 @@ public class AuthController {
     @Operation(summary = "Registrasi Mahasiswa Baru", description = "Mendaftarkan akun baru khusus untuk Mahasiswa (ROLE_MAHASISWA).")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        // Panggil service untuk mendaftarkan user
         User result = authService.registerUser(registerRequest);
-
-        // (Opsional) Memberikan header 'Location' untuk user baru, best practice REST
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
                 .buildAndExpand(result.getNim()).toUri();
-
-        // Kembalikan DTO ApiResponse sukses
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "User registered successfully"));
     }

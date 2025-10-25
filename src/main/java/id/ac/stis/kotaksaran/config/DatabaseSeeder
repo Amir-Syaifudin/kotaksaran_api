@@ -19,7 +19,7 @@ public class DatabaseSeeder {
             PasswordEncoder passwordEncoder) {
 
         return args -> {
-            // Cek apakah akun Super Admin sudah ada (misal: berdasarkan NIM/username)
+            // Cek apakah akun Super Admin sudah ada dalam database
             Optional<User> adminOptional = userRepository.findByNim("admin");
 
             if (adminOptional.isEmpty()) {

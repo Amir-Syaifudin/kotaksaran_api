@@ -9,7 +9,6 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <!-- Project Metadata -->
     <groupId>id.ac.stis.kotaksaran</groupId>
     <artifactId>kotaksaran-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -26,8 +25,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -44,8 +41,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- Database & Utilities -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -58,15 +53,14 @@
         </dependency>
 
         <!-- Security & Documentation (JWT & Swagger) -->
-        <!-- 1. Dependensi untuk OpenAPI/Swagger (Documentation) -->
+        <!-- Dependensi untuk OpenAPI/Swagger (Documentation) -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.5.0</version>
         </dependency>
 
-        <!-- 2. Dependensi untuk JSON Web Token (JWT) -->
-        <!-- Kita HILANGKAN versi di starter agar kompatibel dengan parent 3.5.7 -->
+        <!-- Dependensi untuk JSON Web Token (JWT) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -84,8 +78,6 @@
             <version>0.12.5</version>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

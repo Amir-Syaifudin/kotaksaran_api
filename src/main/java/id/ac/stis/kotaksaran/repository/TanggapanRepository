@@ -1,17 +1,12 @@
-// File: src/main/java/id/ac/stis/kotaksaran/repository/TanggapanRepository.java
-
 package id.ac.stis.kotaksaran.repository;
 
-import id.ac.stis.kotaksaran.entity.Tanggapan; // <-- HARUS ENTITAS TANGGAPAN
+import id.ac.stis.kotaksaran.entity.Tanggapan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository untuk entitas Tanggapan.
- */
+// Repository untuk entitas Tanggapan
 @Repository
-public interface TanggapanRepository extends JpaRepository<Tanggapan, Long> { 
-    // Tidak perlu method kustom (findByPengirimId, dll.) di sini
+public interface TanggapanRepository extends JpaRepository<Tanggapan, Long> {
 }

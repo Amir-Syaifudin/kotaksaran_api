@@ -18,14 +18,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Entitas User, mewakili tabel 'users' di database.
- * Mengimplementasikan UserDetails agar bisa langsung digunakan oleh Spring Security untuk autentikasi.
- */
-@Data // Lombok: auto-generates getters, setters, toString, equals, hashCode
-@Builder // Lombok: builder pattern
-@NoArgsConstructor // Lombok: constructor tanpa argumen
-@AllArgsConstructor // Lombok: constructor dengan semua argumen
+//Entitas User, mewakili tabel 'users' di database.
+@Data 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -36,7 +33,7 @@ public class User implements UserDetails {
 
     @NotBlank(message = "NIM tidak boleh kosong")
     @Column(unique = true)
-    @Size(min = 8, max = 10, message = "NIM harus 8 digit")
+    @Size(min = 8, max = 10, message = "NIM harus 8-10 digit")
     private String nim; // Digunakan sebagai username untuk login
 
     @NotBlank(message = "Nama tidak boleh kosong")
@@ -48,39 +45,39 @@ public class User implements UserDetails {
     private String email;
 
     @NotBlank(message = "Password tidak boleh kosong")
-    private String password; // Akan disimpan dalam bentuk terenkripsi (Bcrypt)
+    private String password;
 
     @NotNull
-    @Enumerated(EnumType.STRING) // Simpan enum sebagai String ("ROLE_MAHASISWA")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    /**
-     * Relasi One-to-Many: Satu User bisa punya banyak Saran.
-     * 'mappedBy = "pengirim"' berarti relasi ini dikelola oleh field 'pengirim' di class Saran.
-     */
+    //Relasi One-to-Many: Satu User bisa punya banyak Saran
     @OneToMany(mappedBy = "pengirim", fetch = FetchType.LAZY)
-    private Set<Saran> saranList; // Gunakan Set untuk performa lebih baik dan menghindari duplikat
-
-    // --- Implementasi Metode UserDetails (Wajib untuk Spring Security) ---
-
+    private Set<Saran> saranList; 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Memberitahu Spring Security apa peran (role) pengguna ini
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public String getUsername() {
-        // Spring Security akan menggunakan NIM sebagai username untuk login
+        // menggunakan NIM sebagai username untuk login
         return this.nim;
     }
 
-    // Metode di bawah ini bisa di-custom jika perlu (misal: akun bisa dikunci),
-    // tapi untuk sekarang kita set default 'true'.
-
-    @Override
+     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        // 1. Periksa Role. Jika Admin, akun tidak pernah kedaluwarsa.
+        if (this.role == Role.ROLE_ADMIN) {
+            return true;
+        }
+
+        // 2. Periksa tanggal kedaluwarsa (5 tahun)
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiryDate = this.createdAt.plusYears(5);
+
+        // Akun valid (non-expired) jika 'sekarang' masih sebelum tanggal kedaluwarsa
+        return now.isBefore(expiryDate);
     }
 
     @Override

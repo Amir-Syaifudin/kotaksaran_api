@@ -9,9 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Konfigurasi ini bertujuan untuk menambahkan tombol "Authorize" (gembok)
- * di halaman Swagger UI, sehingga kita bisa memasukkan token JWT
- * untuk menguji endpoint yang terproteksi.
+ * Konfigurasi ini bertujuan untuk menambahkan tombol "Authorize" di halaman Swagger UI, sehingga bisa memasukkan token JWT untuk menguji endpoint yang terproteksi.
  */
 @Configuration
 public class SwaggerConfig {
@@ -33,7 +31,6 @@ public class SwaggerConfig {
                                                 .bearerFormat("JWT")
                                 )
                 )
-                // Menambahkan skema keamanan ini ke semua endpoint
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 // Informasi dasar API
                 .info(new Info()
