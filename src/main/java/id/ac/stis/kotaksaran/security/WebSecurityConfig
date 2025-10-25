@@ -1,7 +1,7 @@
-package id.ac.stis.kotaksaran.kotaksaran_api.security;
+package id.ac.stis.kotaksaran.security;
 
-import id.ac.stis.kotaksaran.kotaksaran_api.security.jwt.JwtAuthenticationFilter;
-import id.ac.stis.kotaksaran.kotaksaran_api.service.CustomUserDetailsService;
+import id.ac.stis.kotaksaran.security.jwt.JwtAuthenticationFilter;
+import id.ac.stis.kotaksaran.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import id.ac.stis.kotaksaran.kotaksaran_api.security.JwtAuthenticationEntryPoint; 
+import id.ac.stis.kotaksaran.security.JwtAuthenticationEntryPoint; 
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 /**
  * Konfigurasi Keamanan Web (Manajer Keamanan).
@@ -42,27 +43,34 @@ public class WebSecurityConfig {
     // Daftar semua URL yang harus diizinkan secara publik (WHITE LIST)
     // Menggunakan pola glob (**) yang lebih luas untuk memastikan semua resource Swagger termuat.
   private static final String[] PUBLIC_URLS = {
+    // PUBLIC ENDPOINTS (Harus diakses langsung)
     "/api/auth/**",
-        // Pola paling agresif untuk Swagger/OpenAPI
-    "/v3/api-docs/**",
-    "/swagger-ui/**",
-    "/swagger-ui.html",
-    "/swagger-resources/**", 
-    "/webjars/**", 
-    "/h2-console/**",
-    "/error"
-    "/v3/api-docs",         // Pastikan path root API docs ter-cover
-    "/swagger-ui/index.html"
-  };
+    "/error", // Untuk error handling
+
+    // SWAGGER/OPENAPI URLS - MAX COVERAGE
+    "/v3/api-docs",         // Path root API-docs (tanpa wildcard)
+    "/v3/api-docs/**",      // Path root API-docs (dengan wildcard)
+    "/swagger-ui/index.html", // Path spesifik halaman index
+    "/swagger-ui/**",       // Semua resource di bawah swagger-ui
+    "/swagger-resources/**",
+    "/swagger-resources",
+    "/configuration/**",    // Konfigurasi Spring
+    "/webjars/**",          // Semua resource Webjars (CSS/JS)
+    
+    // H2 CONSOLE (Untuk development)
+    "/h2-console/**"
+};
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
+        .cors(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .exceptionHandling(exceptions -> exceptions
                     .authenticationEntryPoint(unauthorizedHandler) 
                 )
         .authorizeHttpRequests(authz -> authz
+        
             // Menggunakan AntPathRequestMatcher secara eksplisit
             .requestMatchers(PUBLIC_URLS).permitAll() // Menggunakan array PUBLIC_URLS
             // Endpoint lainnya harus diautentikasi
