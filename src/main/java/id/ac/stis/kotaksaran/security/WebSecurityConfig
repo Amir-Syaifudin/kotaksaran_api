@@ -51,6 +51,8 @@ public class WebSecurityConfig {
     "/webjars/**", 
     "/h2-console/**",
     "/error"
+    "/v3/api-docs",         // Pastikan path root API docs ter-cover
+    "/swagger-ui/index.html"
   };
 
   @Bean
