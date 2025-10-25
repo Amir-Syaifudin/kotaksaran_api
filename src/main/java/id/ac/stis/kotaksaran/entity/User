@@ -36,7 +36,7 @@ public class User implements UserDetails {
 
     @NotBlank(message = "NIM tidak boleh kosong")
     @Column(unique = true)
-    @Size(min = 8, max = 8, message = "NIM harus 8 digit")
+    @Size(min = 8, max = 10, message = "NIM harus 8 digit")
     private String nim; // Digunakan sebagai username untuk login
 
     @NotBlank(message = "Nama tidak boleh kosong")

@@ -1,0 +1,41 @@
+package id.ac.stis.kotaksaran.config;
+
+import id.ac.stis.kotaksaran.entity.Role;
+import id.ac.stis.kotaksaran.entity.User;
+import id.ac.stis.kotaksaran.repository.UserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+@Configuration
+public class DatabaseSeeder {
+
+    @Bean
+    public CommandLineRunner initDatabase(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+
+        return args -> {
+            // Cek apakah akun Super Admin sudah ada (misal: berdasarkan NIM/username)
+            Optional<User> adminOptional = userRepository.findByNim("admin");
+
+            if (adminOptional.isEmpty()) {
+                // 1. Buat user admin baru
+                User admin = User.builder()
+                        .nim("admin")
+                        .nama("Super Admin")
+                        .email("admin@stis.ac.id")
+                        .password(passwordEncoder.encode("admin123")) // Password yang akan digunakan
+                        .role(Role.ROLE_ADMIN) // Set role sebagai ADMIN
+                        .build();
+
+                // 2. Simpan ke database H2
+                userRepository.save(admin);
+                System.out.println("Super Admin berhasil dibuat: admin / admin123");
+            }
+        };
+    }
+}

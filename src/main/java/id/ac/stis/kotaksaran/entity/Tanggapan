@@ -50,6 +50,6 @@ public class Tanggapan {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
-    private User admin; // Ini adalah User dengan ROLE_ADMIN
+    private User penanggap; // Ini adalah User dengan ROLE_ADMIN
 }
 
