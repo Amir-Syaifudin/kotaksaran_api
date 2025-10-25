@@ -1,112 +1,342 @@
-API Kotak Saran Polstat STIS
+# API Kotak Saran Polstat STIS
 
-Ini adalah web service backend untuk aplikasi Kotak Saran Mahasiswa, yang dibangun sebagai bagian dari Ujian Tengah Semester mata kuliah Pemrograman Platform Khusus (PPK).
+Ini adalah **web service backend** untuk aplikasi **Kotak Saran Mahasiswa**, yang dikembangkan sebagai bagian dari **Ujian Tengah Semester** mata kuliah *Pemrograman Platform Khusus (PPK)* di **Politeknik Statistika STIS**.
 
-Layanan ini menyediakan RESTful API yang aman untuk mengelola alur kerja saran, mulai dari pengajuan oleh mahasiswa hingga tanggapan oleh admin, dengan menggunakan autentikasi berbasis JWT.
+Layanan ini menyediakan **RESTful API** yang aman dan terstruktur untuk mengelola alur kerja saran — mulai dari pengajuan oleh mahasiswa hingga tanggapan oleh admin — dengan **autentikasi berbasis JWT**.
 
-Fitur Utama
+---
 
-Autentikasi & Otorisasi: Registrasi dan Login berbasis JWT (Spring Security).
+##  Fitur Utama
 
-Berbasis Peran (RBAC): Peran ROLE_MAHASISWA (hanya bisa mengirim dan melihat saran sendiri) dan ROLE_ADMIN (bisa melihat semua saran dan memberi tanggapan).
+- **Autentikasi & Otorisasi**
+  - Registrasi dan Login berbasis JWT (Spring Security).
+  - Refresh token otomatis untuk sesi pengguna.
 
-Alur Kerja Saran: Status saran yang jelas (MASUK, DIPROSES, SELESAI).
+- **Berbasis Peran (RBAC)**
+  - `ROLE_MAHASISWA`: hanya dapat mengirim dan melihat saran sendiri.
+  - `ROLE_ADMIN`: dapat melihat semua saran dan memberikan tanggapan.
 
-Akuntabilitas: Sistem mencatat admin mana yang memberi tanggapan.
+- **Alur Kerja Saran**
+  - Status saran jelas dan transparan: `MASUK`, `DIPROSES`, `SELESAI`.
 
-Anonimitas: Mahasiswa dapat memilih untuk mengirim saran secara anonim.
+- **Akuntabilitas**
+  - Setiap tanggapan dicatat oleh sistem, termasuk identitas admin pemberi tanggapan.
 
-Kedaluwarsa Akun: Akun mahasiswa otomatis kedaluwarsa setelah 5 tahun dari tanggal pendaftaran.
+- **Anonimitas**
+  - Mahasiswa dapat memilih untuk mengirim saran secara anonim.
 
-Dokumentasi API: Live documentation dibuat otomatis dengan Swagger (OpenAPI).
+- **Kedaluwarsa Akun**
+  - Akun mahasiswa otomatis kedaluwarsa setelah 5 tahun sejak pendaftaran.
 
-Tumpukan Teknologi (Tech Stack)
+- **Dokumentasi API Otomatis**
+  - Dihasilkan secara langsung menggunakan **Swagger (OpenAPI)**.
 
-Framework: Spring Boot 3.5.7
+---
 
-Bahasa: Java 21
+##  Tumpukan Teknologi (Tech Stack)
 
-Keamanan: Spring Security 6 (Autentikasi JWT)
+| Komponen | Teknologi |
+|-----------|------------|
+| **Framework** | Spring Boot 3.5.7 |
+| **Bahasa** | Java 21 |
+| **Keamanan** | Spring Security 6 (JWT) |
+| **Database** | H2 Database (In-Memory) |
+| **ORM** | Spring Data JPA (Hibernate) |
+| **Dokumentasi** | Springdoc OpenAPI (Swagger UI) |
+| **Build Tool** | Apache Maven |
 
-Data: Spring Data JPA (Hibernate)
+---
 
-Database: H2 Database (In-Memory)
+##  Cara Menjalankan Proyek (Lokal)
 
-Dokumentasi: Springdoc OpenAPI (Swagger UI)
+Proyek ini menggunakan **Maven Wrapper**, sehingga Anda **tidak perlu menginstal Maven secara manual**.
 
-Build: Apache Maven
+### 1. Prasyarat
 
-Cara Menjalankan Proyek (Lokal)
+Pastikan Anda telah menginstal:
+- **JDK 21** atau versi lebih baru
+- **Git** (opsional, untuk cloning repo)
 
-Proyek ini menggunakan Maven Wrapper, sehingga Anda tidak perlu menginstal Maven secara manual.
+---
 
-Prasyarat:
+### 2. Clone Repositori
 
-Pastikan Anda memiliki JDK (Java Development Kit) 21 atau yang lebih baru terinstal.
-
-Clone Repositori:
-
-git clone [https://github.com/amir-syaifudin/kotaksaran_api.git](https://github.com/amir-syaifudin/kotaksaran_api.git)
+```bash
+git clone https://github.com/amir-syaifudin/kotaksaran_api.git
 cd kotaksaran_api
+```
 
+---
 
-Build Proyek (Menggunakan Maven Wrapper):
+### 3. Build Proyek
 
-Di Windows:
-
+**Windows**
+```bash
 .\mvnw.cmd clean install
+```
 
-
-Di macOS/Linux:
-
+**macOS/Linux**
+```bash
 ./mvnw clean install
+```
 
+---
 
-Jalankan Aplikasi:
+### 4. Jalankan Aplikasi
 
-Di Windows:
-
+**Windows**
+```bash
 .\mvnw.cmd spring-boot:run
+```
 
-
-Di macOS/Linux:
-
+**macOS/Linux**
+```bash
 ./mvnw spring-boot:run
+```
 
+---
 
-Aplikasi Siap:
-Aplikasi akan berjalan di http://localhost:8083.
+### 5. Aplikasi Siap Digunakan
 
-Dokumentasi & Database
+Aplikasi akan berjalan di:  
+ [http://localhost:8083](http://localhost:8083)
 
-1. Dokumentasi API (Swagger UI)
+---
 
-Setelah aplikasi berjalan, dokumentasi API interaktif (Swagger UI) dapat diakses di:
-http://localhost:8083/swagger-ui/index.html
+## 📖 Dokumentasi & Database
 
-Di halaman ini, Anda dapat menguji semua endpoint secara langsung.
+### 1. Dokumentasi API (Swagger UI)
 
-2. Database (H2 Console)
+Akses dokumentasi interaktif di:  
+ [http://localhost:8083/swagger-ui/index.html](http://localhost:8083/swagger-ui/index.html)
 
-Database H2 in-memory dapat diakses melalui dashboard web di:
-http://localhost:8083/h2-console
+Anda dapat mencoba seluruh endpoint langsung dari antarmuka Swagger.
 
-Pengaturan Login H2 Console:
+---
 
-JDBC URL: jdbc:h2:mem:testdb
+### 2. Database (H2 Console)
 
+Akses database H2 di:  
+ [http://localhost:8083/h2-console](http://localhost:8083/h2-console)
+
+**Konfigurasi Login:**
+```
+JDBC URL : jdbc:h2:mem:testdb
 User Name: sa
+Password : (biarkan kosong)
+```
 
-Password: (biarkan kosong)
+---
 
-Akun Default
+##  Akun Default
 
-Saat aplikasi pertama kali berjalan, sebuah akun admin default akan dibuat oleh DatabaseSeeder:
+Saat aplikasi pertama kali dijalankan, sistem otomatis membuat akun admin melalui `DatabaseSeeder`.
 
-Username (NIM): admin
+| Field | Nilai |
+|--------|--------|
+| **Username (NIM)** | admin |
+| **Password** | admin123 |
+| **Role** | ROLE_ADMIN |
 
-Password: admin123
+Gunakan akun ini untuk login di endpoint `/api/auth/login` dan mendapatkan **token JWT** untuk mengakses endpoint admin.
 
-Role: ROLE_ADMIN
+---
 
-Anda dapat menggunakan akun ini untuk login ke /api/auth/login dan mendapatkan token JWT untuk menguji endpoint admin.
+##  Contoh Penggunaan API
+
+Berikut beberapa contoh permintaan (request) dan tanggapan (response) JSON utama.
+
+---
+
+### 1. Registrasi Mahasiswa
+
+**Endpoint:**  
+`POST /api/auth/register`
+
+**Body:**
+```json
+{
+  "nim": "222111111",
+  "nama": "Andi Pratama",
+  "password": "password123",
+  "angkatan": 2022
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Registrasi berhasil, silakan login untuk mendapatkan token."
+}
+```
+
+---
+
+### 2. Login
+
+**Endpoint:**  
+`POST /api/auth/login`
+
+**Body:**
+```json
+{
+  "nim": "222111111",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "role": "ROLE_MAHASISWA",
+  "expiresIn": 3600000
+}
+```
+
+---
+
+### 3. Mengirim Saran (Mahasiswa)
+
+**Endpoint:**  
+`POST /api/saran`
+
+**Header:**  
+`Authorization: Bearer <JWT_TOKEN>`
+
+**Body:**
+```json
+{
+  "judul": "Kantin Perlu Diperluas",
+  "isi": "Jumlah meja sangat terbatas pada jam makan siang.",
+  "anonim": true
+}
+```
+
+**Response:**
+```json
+{
+  "id": 3,
+  "status": "MASUK",
+  "createdAt": "2025-10-25T10:15:30",
+  "anonim": true
+}
+```
+
+---
+
+### 4. Melihat Saran Sendiri (Mahasiswa)
+
+**Endpoint:**  
+`GET /api/saran/me`
+
+**Header:**  
+`Authorization: Bearer <JWT_TOKEN>`
+
+**Response:**
+```json
+[
+  {
+    "id": 3,
+    "judul": "Kantin Perlu Diperluas",
+    "status": "MASUK",
+    "anonim": true
+  }
+]
+```
+
+---
+
+### 5. Melihat Semua Saran (Admin)
+
+**Endpoint:**  
+`GET /api/saran/all`
+
+**Header:**  
+`Authorization: Bearer <JWT_TOKEN_ADMIN>`
+
+**Response:**
+```json
+[
+  {
+    "id": 3,
+    "judul": "Kantin Perlu Diperluas",
+    "status": "MASUK",
+    "mahasiswa": "Anonim",
+    "tanggal": "2025-10-25T10:15:30"
+  }
+]
+```
+
+---
+
+### 6. Memberi Tanggapan (Admin)
+
+**Endpoint:**  
+`POST /api/saran/{id}/tanggapan`
+
+**Header:**  
+`Authorization: Bearer <JWT_TOKEN_ADMIN>`
+
+**Body:**
+```json
+{
+  "isiTanggapan": "Terima kasih atas sarannya, akan kami evaluasi bersama pihak kampus."
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Tanggapan berhasil disimpan.",
+  "status": "DIPROSES"
+}
+```
+
+---
+
+##  Pengujian JWT dengan Postman
+
+1. Jalankan aplikasi di `http://localhost:8083`.
+2. Lakukan **login** dan salin token JWT dari respons.
+3. Tambahkan header berikut di setiap request:
+   ```
+   Authorization: Bearer <JWT_TOKEN>
+   ```
+4. Uji endpoint `/api/saran` untuk peran mahasiswa dan `/api/saran/all` untuk admin.
+
+---
+
+##  Struktur Proyek (Ringkas)
+
+```
+kotaksaran_api/
+ ┣ src/
+ ┃ ┣ main/
+ ┃ ┃ ┣ java/id/ac/stis/kotaksaran/kotaksaran_api/
+ ┃ ┃ ┃ ┣ controller/
+ ┃ ┃ ┃ ┣ model/
+ ┃ ┃ ┃ ┣ repository/
+ ┃ ┃ ┃ ┣ security/
+ ┃ ┃ ┃ ┗ service/
+ ┃ ┃ ┗ resources/
+ ┃ ┃    ┣ application.properties
+ ┃ ┃    ┗ data.sql (opsional)
+ ┣ pom.xml
+ ┗ README.md
+```
+
+---
+
+##  Lisensi
+
+Proyek ini dikembangkan untuk **tujuan akademik** sebagai bagian dari Ujian Tengah Semester mata kuliah **Pemrograman Platform Khusus (PPK)** di **Politeknik Statistika STIS**.  
+Segala bentuk distribusi ulang untuk kepentingan komersial **tidak diperkenankan**.
+
+---
+
+ **Dikembangkan oleh:**  
+**Amir Syaifudin**  
+Politeknik Statistika STIS  
+Mata Kuliah: Pemrograman Platform Khusus (PPK)  
+Tahun: 2025
