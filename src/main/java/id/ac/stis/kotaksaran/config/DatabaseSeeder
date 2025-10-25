@@ -23,9 +23,9 @@ public class DatabaseSeeder {
             Optional<User> adminOptional = userRepository.findByNim("admin");
 
             if (adminOptional.isEmpty()) {
-                // 1. Buat user admin baru
+                // 1. Buat user admin baru (Untuk testing)
                 User admin = User.builder()
-                        .nim("admin")
+                        .nim("222312968")
                         .nama("Super Admin")
                         .email("admin@stis.ac.id")
                         .password(passwordEncoder.encode("admin123")) // Password yang akan digunakan
