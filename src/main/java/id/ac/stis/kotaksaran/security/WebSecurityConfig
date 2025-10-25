@@ -72,14 +72,9 @@ public class WebSecurityConfig {
                     .authenticationEntryPoint(unauthorizedHandler) 
                 )
         .authorizeHttpRequests(authz -> authz
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/error")).permitAll()
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/v3/api-docs/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/swagger-ui/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/swagger-resources/**")).permitAll()
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-            // Menggunakan AntPathRequestMatcher secara eksplisit
-            .requestMatchers(PUBLIC_URLS).permitAll() // Menggunakan array PUBLIC_URLS
+            
+            // HANYA gunakan array PUBLIC_URLS yang sudah Anda definisikan di atas
+            .requestMatchers(PUBLIC_URLS).permitAll()
             // Endpoint lainnya harus diautentikasi
             .anyRequest().authenticated()
         )
