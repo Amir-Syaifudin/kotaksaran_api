@@ -2,7 +2,7 @@
 
 Ini adalah **web service backend** untuk aplikasi **Kotak Saran Mahasiswa**, yang dikembangkan sebagai bagian dari **Ujian Tengah Semester** mata kuliah *Pemrograman Platform Khusus (PPK)* di **Politeknik Statistika STIS**.
 
-Layanan ini menyediakan **RESTful API** yang aman dan terstruktur untuk mengelola alur kerja saran — mulai dari pengajuan oleh mahasiswa hingga tanggapan oleh admin — dengan **autentikasi berbasis JWT**.
+Layanan ini menyediakan **RESTful API** yang aman dan terstruktur untuk mengelola alur kerja saran  mulai dari pengajuan oleh mahasiswa hingga tanggapan oleh admin  dengan **autentikasi berbasis JWT**.
 
 ---
 
