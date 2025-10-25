@@ -1,6 +1,7 @@
 package id.ac.stis.kotaksaran.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

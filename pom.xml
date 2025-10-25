@@ -21,6 +21,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -94,6 +100,13 @@
 
     <build>
         <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <mainClass>id.ac.stis.kotaksaran.KotaksaranApiApplication</mainClass> 
+                    </configuration>
+                </plugin>
             <!-- Konfigurasi Fix Lombok/JDK 21/24 (VERSI PALING CLEAN) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
