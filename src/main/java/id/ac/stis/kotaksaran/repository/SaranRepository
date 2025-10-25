@@ -1,0 +1,23 @@
+package id.ac.stis.kotaksaran.repository;
+
+import id.ac.stis.kotaksaran.entity.Saran;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * Repository untuk entitas Saran.
+ */
+@Repository
+public interface SaranRepository extends JpaRepository<Saran, Long> {
+
+    /**
+     * Mencari semua saran yang dikirim oleh user tertentu.
+     * Digunakan untuk endpoint "Lihat Saran Saya".
+     *
+     * @param pengirimId ID dari user pengirim
+     * @return List<Saran>
+     */
+    List<Saran> findByPengirimId(Long pengirimId);
+}

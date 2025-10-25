@@ -1,0 +1,68 @@
+package id.ac.stis.kotaksaran.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+/**
+ * Entitas Saran, mewakili tabel 'saran' di database.
+ * Sesuai dokumentasi 3.b.ii.2.
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "saran")
+public class Saran {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Judul tidak boleh kosong")
+    private String judul;
+
+    @NotBlank(message = "Isi saran tidak boleh kosong")
+    @Column(columnDefinition = "TEXT") // Agar bisa menampung isi yang panjang
+    private String isi;
+
+    @NotNull
+    private Boolean anonim; // true jika mahasiswa ingin namanya disembunyikan
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private KategoriSaran kategori;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private StatusSaran status;
+
+    @CreationTimestamp // Otomatis diisi oleh Hibernate saat data dibuat
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    /**
+     * Relasi Many-to-One: Banyak Saran dimiliki oleh satu User (Pengirim).
+     * 'JoinColumn' mendefinisikan foreign key 'user_id' di tabel 'saran'.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User pengirim;
+
+    /**
+     * Relasi One-to-One: Satu Saran punya satu Tanggapan.
+     * 'mappedBy = "saran"' berarti relasi ini dikelola oleh field 'saran' di class Tanggapan.
+     * 'cascade = CascadeType.ALL' berarti jika Saran dihapus, Tanggapan terkait juga ikut terhapus.
+     */
+    @OneToOne(mappedBy = "saran", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Tanggapan tanggapan;
+}
+

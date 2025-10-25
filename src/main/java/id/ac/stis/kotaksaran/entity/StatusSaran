@@ -1,0 +1,23 @@
+package id.ac.stis.kotaksaran.entity;
+
+/**
+ * Enum untuk alur kerja (workflow) status saran.
+ * Sesuai dengan dokumentasi Bagian 2 (Alur Kerja "To-Be").
+ */
+public enum StatusSaran {
+    /**
+     * Status awal saat saran baru dibuat oleh mahasiswa.
+     */
+    MASUK,
+
+    /**
+     * Status saat admin sedang meninjau atau menindaklanjuti saran.
+     */
+    DIPROSES,
+
+    /**
+     * Status akhir saat saran sudah ditanggapi dan ditutup.
+     */
+    SELESAI
+}
+

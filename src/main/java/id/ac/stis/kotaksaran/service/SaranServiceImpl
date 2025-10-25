@@ -1,0 +1,134 @@
+apackage id.ac.stis.kotaksaran.service.impl;
+
+import id.ac.stis.kotaksaran.dto.saran.SaranRequest;
+import id.ac.stis.kotaksaran.dto.saran.SaranResponse;
+import id.ac.stis.kotaksaran.dto.saran.TanggapanRequest;
+import id.ac.stis.kotaksaran.dto.saran.UpdateStatusRequest;
+import id.ac.stis.kotaksaran.entity.Saran;
+import id.ac.stis.kotaksaran.entity.StatusSaran;
+import id.ac.stis.kotaksaran.entity.Tanggapan;
+import id.ac.stis.kotaksaran.entity.User;
+import id.ac.stis.kotaksaran.exception.AppException;
+import id.ac.stis.kotaksaran.exception.ResourceNotFoundException;
+import id.ac.stis.kotaksaran.repository.SaranRepository;
+import id.ac.stis.kotaksaran.repository.TanggapanRepository;
+import id.ac.stis.kotaksaran.service.SaranService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Implementasi dari SaranService.
+ * Berisi semua logika bisnis untuk proses kotak saran.
+ */
+@Service
+public class SaranServiceImpl implements SaranService {
+
+    @Autowired
+    private SaranRepository saranRepository;
+
+    @Autowired
+    private TanggapanRepository tanggapanRepository;
+
+    // --- LOGIKA MAHASISWA ---
+
+    @Override
+    public SaranResponse createSaran(User currentUser, SaranRequest saranRequest) {
+        // 1. Buat Entity Saran baru
+        Saran saran = new Saran();
+        saran.setJudul(saranRequest.getJudul());
+        saran.setIsi(saranRequest.getIsi());
+        saran.setKategori(saranRequest.getKategori());
+        saran.setAnonim(saranRequest.getAnonim());
+        saran.setStatus(StatusSaran.MASUK); // Status default
+        saran.setPengirim(currentUser); // Tautkan dengan user yang login
+
+        // 2. Simpan ke database
+        Saran savedSaran = saranRepository.save(saran);
+
+        // 3. Kembalikan sebagai DTO Response
+        return new SaranResponse(savedSaran);
+    }
+
+    @Override
+    public List<SaranResponse> getSaranByCurrentUser(User currentUser) {
+        // 1. Panggil metode kustom dari repository
+        List<Saran> saranList = saranRepository.findByPengirimId(currentUser.getId());
+
+        // 2. Mapping setiap Entity Saran ke DTO SaranResponse
+        return saranList.stream()
+                .map(SaranResponse::new) // Menggunakan konstruktor SaranResponse(saran)
+                .collect(Collectors.toList());
+    }
+
+    // --- LOGIKA ADMIN ---
+
+    @Override
+    public List<SaranResponse> getAllSaran() {
+        // 1. Ambil semua saran dari database
+        List<Saran> saranList = saranRepository.findAll();
+
+        // 2. Mapping ke DTO Response
+        return saranList.stream()
+                .map(SaranResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SaranResponse getSaranById(Long idSaran) {
+        // 1. Cari saran, lempar exception jika tidak ketemu
+        Saran saran = saranRepository.findById(idSaran)
+                .orElseThrow(() -> new ResourceNotFoundException("Saran", "id", idSaran));
+
+        // 2. Mapping ke DTO Response
+        return new SaranResponse(saran);
+    }
+
+    @Override
+    public SaranResponse giveTanggapan(User currentUser, Long idSaran, TanggapanRequest tanggapanRequest) {
+        // 1. Cari saran
+        Saran saran = saranRepository.findById(idSaran)
+                .orElseThrow(() -> new ResourceNotFoundException("Saran", "id", idSaran));
+
+        // 2. Cek apakah saran ini sudah ditanggapi
+        if(saran.getTanggapan() != null) {
+            throw new AppException("Saran ini sudah ditanggapi.");
+        }
+
+        // 3. Buat Entity Tanggapan baru
+        Tanggapan tanggapan = new Tanggapan();
+        tanggapan.setIsiTanggapan(tanggapanRequest.getIsiTanggapan());
+        tanggapan.setPenanggap(currentUser); // Tautkan dengan Admin yang login
+        tanggapan.setSaran(saran); // Tautkan dengan Saran
+
+        // 4. Simpan tanggapan
+        Tanggapan savedTanggapan = tanggapanRepository.save(tanggapan);
+
+        // 5. Update relasi di Saran
+        saran.setTanggapan(savedTanggapan);
+        // Otomatis ubah status jadi DIPROSES saat tanggapan pertama diberikan
+        saran.setStatus(StatusSaran.DIPROSES);
+        Saran updatedSaran = saranRepository.save(saran);
+
+        // 6. Kembalikan DTO Response
+        return new SaranResponse(updatedSaran);
+    }
+
+    @Override
+    public SaranResponse updateSaranStatus(Long idSaran, UpdateStatusRequest updateStatusRequest) {
+        // 1. Cari saran
+        Saran saran = saranRepository.findById(idSaran)
+                .orElseThrow(() -> new ResourceNotFoundException("Saran", "id", idSaran));
+
+        // 2. Update status
+        saran.setStatus(updateStatusRequest.getStatus());
+
+        // 3. Simpan perubahan
+        Saran updatedSaran = saranRepository.save(saran);
+
+        // 4. Kembalikan DTO Response
+        return new SaranResponse(updatedSaran);
+    }
+}

@@ -1,0 +1,130 @@
+package id.ac.stis.kotaksaran.dto.saran;
+
+import id.ac.stis.kotaksaran.entity.Role;
+import id.ac.stis.kotaksaran.entity.Saran;
+import id.ac.stis.kotaksaran.dto.user.UserProfile;
+import id.ac.stis.kotaksaran.dto.saran.TanggapanResponse;
+
+import java.time.Instant;
+
+/**
+ * DTO utama untuk response body endpoint /api/saran/* (GET)
+ * Ini adalah DTO yang kompleks yang "merakit" data dari berbagai entity.
+ */
+public class SaranResponse {
+    private Long id;
+    private String judul;
+    private String isi;
+    private String kategori;
+    private String status;
+    private Boolean anonim;
+    private Instant createdAt;
+    private UserProfile pengirim; // Mahasiswa yang mengirim
+    private TanggapanResponse tanggapan; // Tanggapan dari admin (bisa null)
+
+    /**
+     * Konstruktor ini adalah "Mapper" kita.
+     * Ia mengubah objek Entity 'Saran' yang rumit menjadi DTO 'SaranResponse' yang bersih.
+     */
+    public SaranResponse(Saran saran) {
+        this.id = saran.getId();
+        this.judul = saran.getJudul();
+        this.isi = saran.getIsi();
+        this.kategori = saran.getKategori().name();
+        this.status = saran.getStatus().name();
+        this.anonim = saran.getAnonim();
+        this.createdAt = saran.getCreatedAt();
+
+        // Jika saran ini anonim, jangan kirim data pengirim
+        if (saran.getAnonim()) {
+            this.pengirim = new UserProfile(null, "anonim", "Anonim", Role.ROLE_MAHASISWA.name());
+        } else {
+            this.pengirim = new UserProfile(
+                    saran.getPengirim().getId(),
+                    saran.getPengirim().getNim(),
+                    saran.getPengirim().getNama(),
+                    saran.getPengirim().getRole().name()
+            );
+        }
+
+        // Jika sudah ada tanggapan, mapping juga tanggapannya
+        if (saran.getTanggapan() != null) {
+            this.tanggapan = new TanggapanResponse(saran.getTanggapan());
+        } else {
+            this.tanggapan = null;
+        }
+    }
+
+    // Getters dan Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getJudul() {
+        return judul;
+    }
+
+    public void setJudul(String judul) {
+        this.judul = judul;
+    }
+
+    public String getIsi() {
+        return isi;
+    }
+
+    public void setIsi(String isi) {
+        this.isi = isi;
+    }
+
+    public String getKategori() {
+        return kategori;
+    }
+
+    public void setKategori(String kategori) {
+        this.kategori = kategori;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Boolean getAnonim() {
+        return anonim;
+    }
+
+    public void setAnonim(Boolean anonim) {
+        this.anonim = anonim;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public UserProfile getPengirim() {
+        return pengirim;
+    }
+
+    public void setPengirim(UserProfile pengirim) {
+        this.pengirim = pengirim;
+    }
+
+    public TanggapanResponse getTanggapan() {
+        return tanggapan;
+    }
+
+    public void setTanggapan(TanggapanResponse tanggapan) {
+        this.tanggapan = tanggapan;
+    }
+}

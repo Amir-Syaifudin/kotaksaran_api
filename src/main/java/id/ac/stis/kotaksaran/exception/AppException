@@ -1,0 +1,16 @@
+package id.ac.stis.kotaksaran.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+/**
+ * Exception kustom untuk error logika aplikasi umum
+ * (misal: NIM sudah terdaftar).
+ * Ini akan otomatis mengembalikan respons 400 Bad Request.
+ */
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class AppException extends RuntimeException {
+    public AppException(String message) {
+        super(message);
+    }
+}

@@ -1,0 +1,20 @@
+package id.ac.stis.kotaksaran.entity;
+
+/**
+ * Enum untuk merepresentasikan peran (role) pengguna.
+ * Ini akan digunakan oleh Spring Security untuk otorisasi.
+ */
+public enum Role {
+    /**
+     * Peran untuk mahasiswa.
+     * Bisa mengirim saran dan melihat saran pribadi.
+     */
+    ROLE_MAHASISWA,
+
+    /**
+     * Peran untuk admin (BEM & Kemahasiswaan).
+     * Bisa melihat semua saran dan memberi tanggapan.
+     */
+    ROLE_ADMIN
+}
+

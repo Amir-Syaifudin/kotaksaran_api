@@ -1,0 +1,31 @@
+package id.ac.stis.kotaksaran.dto.auth;
+
+import jakarta.validation.constraints.NotBlank;
+
+/**
+ * DTO untuk request body endpoint /api/auth/login
+ */
+public class LoginRequest {
+    @NotBlank
+    private String nim;
+
+    @NotBlank
+    private String password;
+
+    // Getters dan Setters
+    public String getNim() {
+        return nim;
+    }
+
+    public void setNim(String nim) {
+        this.nim = nim;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

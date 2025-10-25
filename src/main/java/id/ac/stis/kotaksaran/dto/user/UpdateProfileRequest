@@ -1,0 +1,20 @@
+package id.ac.stis.kotaksaran.dto.user;
+
+import jakarta.validation.constraints.NotBlank;
+
+/**
+ * DTO untuk request body endpoint /api/users/me (PUT)
+ */
+public class UpdateProfileRequest {
+    @NotBlank
+    private String nama;
+
+    // Getters dan Setters
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+}

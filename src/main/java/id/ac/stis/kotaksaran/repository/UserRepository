@@ -1,0 +1,21 @@
+package id.ac.stis.kotaksaran.repository;
+
+    import id.ac.stis.kotaksaran.entity.User;
+    import org.springframework.data.jpa.repository.JpaRepository; // <-- PASTIKAN IMPORT ADA
+    import org.springframework.stereotype.Repository;
+    
+
+    import java.util.Optional;
+
+    /**
+     * Repository untuk Entity User.
+     * PASTIKAN extends JpaRepository<User, Long> SUDAH BENAR.
+     * Jika ini hilang, Spring tidak akan mengenalinya.
+     */
+    @Repository
+    public interface UserRepository extends JpaRepository<User, Long> { // <-- PASTIKAN BAGIAN INI ADA
+
+        Optional<User> findByNim(String nim);
+
+        Boolean existsByNim(String nim);
+    }

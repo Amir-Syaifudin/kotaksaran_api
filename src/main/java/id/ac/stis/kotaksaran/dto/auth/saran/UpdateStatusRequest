@@ -1,0 +1,21 @@
+package id.ac.stis.kotaksaran.dto.saran;
+
+import id.ac.stis.kotaksaran.entity.StatusSaran;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ * DTO untuk request body endpoint /api/saran/admin/{id}/status (PUT)
+ */
+public class UpdateStatusRequest {
+    @NotNull
+    private StatusSaran status;
+
+    // Getters dan Setters
+    public StatusSaran getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusSaran status) {
+        this.status = status;
+    }
+}

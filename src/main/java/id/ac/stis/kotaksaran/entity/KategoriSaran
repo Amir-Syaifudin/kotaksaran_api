@@ -1,0 +1,12 @@
+package id.ac.stis.kotaksaran.entity;
+
+/**
+ * Enum untuk kategori saran.
+ * Digunakan untuk memfilter saran.
+ */
+public enum KategoriSaran {
+    AKADEMIK,
+    FASILITAS,
+    LAYANAN,
+    LAINNYA
+}

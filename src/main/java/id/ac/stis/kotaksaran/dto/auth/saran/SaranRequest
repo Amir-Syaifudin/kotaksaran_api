@@ -1,0 +1,55 @@
+package id.ac.stis.kotaksaran.dto.saran;
+
+import id.ac.stis.kotaksaran.entity.KategoriSaran;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ * DTO untuk request body endpoint /api/saran (POST)
+ */
+public class SaranRequest {
+    @NotBlank
+    private String judul;
+
+    @NotBlank
+    private String isi;
+
+    @NotNull
+    private KategoriSaran kategori;
+
+    @NotNull
+    private Boolean anonim;
+
+    // Getters dan Setters
+    public String getJudul() {
+        return judul;
+    }
+
+    public void setJudul(String judul) {
+        this.judul = judul;
+    }
+
+    public String getIsi() {
+        return isi;
+    }
+
+    public void setIsi(String isi) {
+        this.isi = isi;
+    }
+
+    public KategoriSaran getKategori() {
+        return kategori;
+    }
+
+    public void setKategori(KategoriSaran kategori) {
+        this.kategori = kategori;
+    }
+
+    public Boolean getAnonim() {
+        return anonim;
+    }
+
+    public void setAnonim(Boolean anonim) {
+        this.anonim = anonim;
+    }
+}

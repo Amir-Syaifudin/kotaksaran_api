@@ -1,0 +1,89 @@
+package id.ac.stis.kotaksaran.controller;
+
+import id.ac.stis.kotaksaran.dto.saran.SaranRequest;
+import id.ac.stis.kotaksaran.dto.saran.SaranResponse;
+import id.ac.stis.kotaksaran.dto.saran.TanggapanRequest;
+import id.ac.stis.kotaksaran.dto.saran.UpdateStatusRequest;
+import id.ac.stis.kotaksaran.entity.User;
+import id.ac.stis.kotaksaran.security.CurrentUser;
+import id.ac.stis.kotaksaran.service.SaranService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * Controller untuk Modul Inti Kotak Saran (Terproteksi).
+ * Menggunakan @PreAuthorize untuk membedakan hak akses Mahasiswa vs Admin.
+ */
+@RestController
+@RequestMapping("/api/saran")
+@Tag(name = "3. Modul Kotak Saran", description = "Endpoint terproteksi untuk proses bisnis utama (membuat, melihat, menanggapi saran).")
+@SecurityRequirement(name = "bearerAuth") // Semua butuh auth
+public class SaranController {
+
+    @Autowired
+    private SaranService saranService;
+
+    // --- ENDPOINT MAHASISWA ---
+
+    @Operation(summary = "[MAHASISWA] Buat Saran Baru", description = "Mahasiswa mengirim saran baru. (Hanya bisa diakses oleh ROLE_MAHASISWA).")
+    @PostMapping
+    @PreAuthorize("hasRole('MAHASISWA')")
+    public ResponseEntity<SaranResponse> createSaran(@CurrentUser User currentUser,
+                                                     @Valid @RequestBody SaranRequest saranRequest) {
+        SaranResponse saranResponse = saranService.createSaran(currentUser, saranRequest);
+        return ResponseEntity.ok(saranResponse);
+    }
+
+    @Operation(summary = "[MAHASISWA] Lihat Saran Saya", description = "Mahasiswa mengambil daftar saran yang pernah dikirimnya. (Hanya bisa diakses oleh ROLE_MAHASISWA).")
+    @GetMapping("/saya")
+    @PreAuthorize("hasRole('MAHASISWA')")
+    public ResponseEntity<List<SaranResponse>> getSaranByCurrentUser(@CurrentUser User currentUser) {
+        List<SaranResponse> saranList = saranService.getSaranByCurrentUser(currentUser);
+        return ResponseEntity.ok(saranList);
+    }
+
+    // --- ENDPOINT ADMIN ---
+
+    @Operation(summary = "[ADMIN] Lihat Semua Saran", description = "Admin mengambil daftar semua saran dari semua mahasiswa. (Hanya bisa diakses oleh ROLE_ADMIN).")
+    @GetMapping("/admin/semua")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SaranResponse>> getAllSaran() {
+        List<SaranResponse> saranList = saranService.getAllSaran();
+        return ResponseEntity.ok(saranList);
+    }
+    
+    @Operation(summary = "[ADMIN] Lihat Detail Saran", description = "Admin mengambil detail satu saran spesifik berdasarkan ID-nya. (Hanya bisa diakses oleh ROLE_ADMIN).")
+    @GetMapping("/admin/{idSaran}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SaranResponse> getSaranById(@PathVariable Long idSaran) {
+        SaranResponse saran = saranService.getSaranById(idSaran);
+        return ResponseEntity.ok(saran);
+    }
+
+    @Operation(summary = "[ADMIN] Beri Tanggapan", description = "Admin mem-posting tanggapan resmi untuk sebuah saran. (Hanya bisa diakses oleh ROLE_ADMIN).")
+    @PostMapping("/admin/{idSaran}/tanggapan")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SaranResponse> giveTanggapan(@CurrentUser User currentUser,
+                                                       @PathVariable Long idSaran,
+                                                       @Valid @RequestBody TanggapanRequest tanggapanRequest) {
+        SaranResponse saranResponse = saranService.giveTanggapan(currentUser, idSaran, tanggapanRequest);
+        return ResponseEntity.ok(saranResponse);
+    }
+
+    @Operation(summary = "[ADMIN] Update Status Saran", description = "Admin mengubah status saran (misal: dari DIPROSES ke SELESAI). (Hanya bisa diakses oleh ROLE_ADMIN).")
+    @PutMapping("/admin/{idSaran}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SaranResponse> updateSaranStatus(@PathVariable Long idSaran,
+                                                           @Valid @RequestBody UpdateStatusRequest updateStatusRequest) {
+        SaranResponse saranResponse = saranService.updateSaranStatus(idSaran, updateStatusRequest);
+        return ResponseEntity.ok(saranResponse);
+    }
+}

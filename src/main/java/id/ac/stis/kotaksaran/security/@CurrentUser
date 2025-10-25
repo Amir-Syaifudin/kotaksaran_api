@@ -1,0 +1,21 @@
+package id.ac.stis.kotaksaran.security;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import java.lang.annotation.*;
+
+/**
+ * Anotasi custom @CurrentUser
+ *
+ * Ini adalah 'shortcut' untuk mengambil objek User (principal) yang sedang login
+ * dari SecurityContext (yang sudah diisi oleh JwtAuthenticationFilter).
+ *
+ * Daripada menulis @AuthenticationPrincipal User currentUser di setiap metode,
+ * kita bisa menyingkatnya menjadi @CurrentUser User currentUser.
+ * Ini hanya untuk 'convenience' dan 'readability'.
+ */
+@Target({ElementType.PARAMETER, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@AuthenticationPrincipal
+public @interface CurrentUser {
+}

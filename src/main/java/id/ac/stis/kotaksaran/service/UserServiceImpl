@@ -1,0 +1,76 @@
+package id.ac.stis.kotaksaran.service.impl;
+
+import id.ac.stis.kotaksaran.dto.user.ChangePasswordRequest;
+import id.ac.stis.kotaksaran.dto.user.UpdateProfileRequest;
+import id.ac.stis.kotaksaran.dto.user.UserProfile;
+import id.ac.stis.kotaksaran.entity.User;
+import id.ac.stis.kotaksaran.exception.AppException;
+import id.ac.stis.kotaksaran.repository.UserRepository;
+import id.ac.stis.kotaksaran.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+/**
+ * Implementasi dari UserService.
+ * Berisi semua logika bisnis untuk manajemen profil.
+ */
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserProfile getUserProfile(User currentUser) {
+        // Mapping Entity User ke DTO UserProfile
+        return new UserProfile(
+                currentUser.getId(),
+                currentUser.getNim(),
+                currentUser.getNama(),
+                currentUser.getRole().name()
+        );
+    }
+
+    @Override
+    public UserProfile updateUserProfile(User currentUser, UpdateProfileRequest updateProfileRequest) {
+        // 1. Update nama user
+        currentUser.setNama(updateProfileRequest.getNama());
+
+        // 2. Simpan perubahan ke database
+        User updatedUser = userRepository.save(currentUser);
+
+        // 3. Kembalikan DTO profil yang baru
+        return new UserProfile(
+                updatedUser.getId(),
+                updatedUser.getNim(),
+                updatedUser.getNama(),
+                updatedUser.getRole().name()
+        );
+    }
+
+    @Override
+    public void changePassword(User currentUser, ChangePasswordRequest changePasswordRequest) {
+        // 1. Validasi password lama
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), currentUser.getPassword())) {
+            throw new AppException("Password lama salah");
+        }
+
+        // 2. Enkripsi dan set password baru
+        currentUser.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+
+        // 3. Simpan ke database
+        userRepository.save(currentUser);
+    }
+
+    @Override
+    public void deleteUserAccount(User currentUser) {
+        // Hapus user dari database
+        // Relasi (saran, dll) akan ditangani oleh konfigurasi database (misal: CASCADING)
+        // Untuk saat ini, kita hapus user-nya saja.
+        userRepository.delete(currentUser);
+    }
+}

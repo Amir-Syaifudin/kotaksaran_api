@@ -1,0 +1,53 @@
+package id.ac.stis.kotaksaran.service;
+
+import id.ac.stis.kotaksaran.entity.User;
+import id.ac.stis.kotaksaran.exception.ResourceNotFoundException;
+import id.ac.stis.kotaksaran.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * (dari BAB 3.4.c)
+ * "Pencari User". Jembatan antara Spring Security dan UserRepository.
+ * ANOTASI @Service INI SANGAT PENTING.
+ * Ini adalah mata rantai kedua.
+ */
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    UserRepository userRepository;
+
+    /**
+     * Dipanggil oleh Spring Security saat proses login (AuthenticationProvider)
+     * Kita mencari berdasarkan NIM.
+     */
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String nim)
+            throws UsernameNotFoundException {
+        User user = userRepository.findByNim(nim)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found with nim : " + nim)
+                );
+
+        return user; // User.java kita sudah meng-implement UserDetails
+    }
+
+    /**
+     * Dipanggil oleh JwtAuthenticationFilter setelah token divalidasi.
+     * Kita mencari berdasarkan ID.
+     */
+    @Transactional
+    public UserDetails loadUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", id)
+        );
+
+        return user; // User.java kita sudah meng-implement UserDetails
+    }
+}

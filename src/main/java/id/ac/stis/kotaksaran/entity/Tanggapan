@@ -1,0 +1,54 @@
+package id.ac.stis.kotaksaran.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+/**
+ * Entitas Tanggapan, mewakili tabel 'tanggapan' di database.
+ * Sesuai dokumentasi 3.b.ii.3.
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "tanggapan")
+public class Tanggapan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Isi tanggapan tidak boleh kosong")
+    @Column(columnDefinition = "TEXT")
+    private String isiTanggapan;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    /**
+     * Relasi One-to-One: Satu Tanggapan untuk satu Saran.
+     * 'JoinColumn' mendefinisikan foreign key 'saran_id' di tabel 'tanggapan'.
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "saran_id", nullable = false, unique = true)
+    private Saran saran;
+
+    /**
+     * Relasi Many-to-One: Banyak Tanggapan (teoritis) bisa dibuat oleh satu Admin.
+     * Ini untuk mencatat akuntabilitas (siapa admin yang menanggapi).
+     * 'JoinColumn' mendefinisikan foreign key 'admin_id' di tabel 'tanggapan'.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id", nullable = false)
+    private User admin; // Ini adalah User dengan ROLE_ADMIN
+}
+

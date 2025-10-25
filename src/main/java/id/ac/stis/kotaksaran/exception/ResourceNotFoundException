@@ -1,0 +1,16 @@
+package id.ac.stis.kotaksaran.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+/**
+ * Exception kustom untuk menangani kasus di mana
+ * data (misal: User, Saran) tidak ditemukan di database.
+ * Ini akan otomatis mengembalikan respons 404 Not Found.
+ */
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String resourceName, String fieldName, Object fieldValue) {
+        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fieldValue));
+    }
+}

@@ -1,0 +1,25 @@
+package id.ac.stis.kotaksaran.service;
+
+import id.ac.stis.kotaksaran.dto.auth.LoginRequest;
+import id.ac.stis.kotaksaran.dto.auth.RegisterRequest;
+import id.ac.stis.kotaksaran.entity.User;
+
+/**
+ * Interface untuk Service Layer Modul Autentikasi.
+ * Mendefinisikan logika bisnis untuk registrasi dan login.
+ */
+public interface AuthService {
+    /**
+     * Mendaftarkan user baru (Mahasiswa) ke sistem.
+     * @param registerRequest DTO yang berisi nim, password, dan nama.
+     * @return Entity User yang baru dibuat.
+     */
+    User registerUser(RegisterRequest registerRequest);
+
+    /**
+     * Mengautentikasi user (login).
+     * @param loginRequest DTO yang berisi nim dan password.
+     * @return String berupa JWT (JSON Web Token).
+     */
+    String authenticateUser(LoginRequest loginRequest);
+}

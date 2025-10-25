@@ -1,0 +1,69 @@
+package id.ac.stis.kotaksaran.controller;
+
+import id.ac.stis.kotaksaran.dto.ApiResponse;
+import id.ac.stis.kotaksaran.dto.user.ChangePasswordRequest;
+import id.ac.stis.kotaksaran.dto.user.UpdateProfileRequest;
+import id.ac.stis.kotaksaran.dto.user.UserProfile;
+import id.ac.stis.kotaksaran.entity.User;
+import id.ac.stis.kotaksaran.security.CurrentUser;
+import id.ac.stis.kotaksaran.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * Controller untuk Modul Manajemen User (Terproteksi).
+ * Semua endpoint di sini membutuhkan token JWT.
+ */
+@RestController
+@RequestMapping("/api/users")
+@Tag(name = "2. Modul Manajemen User", description = "Endpoint terproteksi untuk mengelola profil pengguna.")
+@SecurityRequirement(name = "bearerAuth") // Menandakan semua endpoint di sini butuh auth (gembok di Swagger)
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @Operation(summary = "Get Profil User", description = "Mengambil detail profil (NIM, Nama, Role) dari user yang sedang login.")
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()") // Hanya user yang terautentikasi (Mahasiswa/Admin) yang bisa
+    public ResponseEntity<UserProfile> getCurrentUserProfile(@CurrentUser User currentUser) {
+        // Panggil service untuk get profil
+        UserProfile userProfile = userService.getUserProfile(currentUser);
+        return ResponseEntity.ok(userProfile);
+    }
+
+    @Operation(summary = "Update Profil User", description = "Memperbarui nama dari user yang sedang login.")
+    @PutMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserProfile> updateUserProfile(@CurrentUser User currentUser,
+                                                         @Valid @RequestBody UpdateProfileRequest updateProfileRequest) {
+        // Panggil service untuk update profil
+        UserProfile updatedProfile = userService.updateUserProfile(currentUser, updateProfileRequest);
+        return ResponseEntity.ok(updatedProfile);
+    }
+
+    @Operation(summary = "Ganti Password", description = "Mengganti password dari user yang sedang login. Membutuhkan password lama dan baru.")
+    @PutMapping("/change-password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse> changePassword(@CurrentUser User currentUser,
+                                                      @Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+        // Panggil service untuk ganti password
+        userService.changePassword(currentUser, changePasswordRequest);
+        return ResponseEntity.ok(new ApiResponse(true, "Password changed successfully"));
+    }
+
+    @Operation(summary = "Hapus Akun", description = "Menghapus akun dari user yang sedang login. (Aksi ini tidak bisa diurungkan).")
+    @DeleteMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse> deleteUserAccount(@CurrentUser User currentUser) {
+        // Panggil service untuk hapus akun
+        userService.deleteUserAccount(currentUser);
+        return ResponseEntity.ok(new ApiResponse(true, "Account deleted successfully"));
+    }
+}

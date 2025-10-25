@@ -1,0 +1,63 @@
+package id.ac.stis.kotaksaran.dto.saran;
+
+import id.ac.stis.kotaksaran.entity.Tanggapan;
+import id.ac.stis.kotaksaran.dto.user.UserProfile; // <- IMPORT DIPERBARUI
+
+import java.time.Instant;
+
+/**
+ * DTO untuk data Tanggapan.
+ * Ini akan di-embed di dalam SaranResponse.
+ */
+public class TanggapanResponse {
+    private Long id;
+    private String isiTanggapan;
+    private Instant createdAt;
+    private UserProfile penanggap; // Admin yang menanggapi
+
+    public TanggapanResponse(Tanggapan tanggapan) {
+        this.id = tanggapan.getId();
+        this.isiTanggapan = tanggapan.getIsiTanggapan();
+        this.createdAt = tanggapan.getCreatedAt();
+        // Membuat UserProfile dari entity User penanggap
+        this.penanggap = new UserProfile(
+                tanggapan.getPenanggap().getId(),
+                tanggapan.getPenanggap().getNim(),
+                tanggapan.getPenanggap().getNama(),
+                tanggapan.getPenanggap().getRole().name()
+        );
+    }
+
+    // Getters dan Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getIsiTanggapan() {
+        return isiTanggapan;
+    }
+
+    public void setIsiTanggapan(String isiTanggapan) {
+        this.isiTanggapan = isiTanggapan;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public UserProfile getPenanggap() {
+        return penanggap;
+    }
+
+    public void setPenanggap(UserProfile penanggap) {
+        this.penanggap = penanggap;
+    }
+}

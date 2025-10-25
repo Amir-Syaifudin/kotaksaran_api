@@ -1,0 +1,20 @@
+package id.ac.stis.kotaksaran.dto.saran;
+
+import jakarta.validation.constraints.NotBlank;
+
+/**
+ * DTO untuk request body endpoint /api/saran/admin/{id}/tanggapan (POST)
+ */
+public class TanggapanRequest {
+    @NotBlank
+    private String isiTanggapan;
+
+    // Getters dan Setters
+    public String getIsiTanggapan() {
+        return isiTanggapan;
+    }
+
+    public void setIsiTanggapan(String isiTanggapan) {
+        this.isiTanggapan = isiTanggapan;
+    }
+}

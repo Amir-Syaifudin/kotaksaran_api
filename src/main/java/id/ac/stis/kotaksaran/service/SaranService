@@ -1,0 +1,65 @@
+package id.ac.stis.kotaksaran.service;
+
+import id.ac.stis.kotaksaran.dto.saran.SaranRequest;
+import id.ac.stis.kotaksaran.dto.saran.SaranResponse;
+import id.ac.stis.kotaksaran.dto.saran.TanggapanRequest;
+import id.ac.stis.kotaksaran.dto.saran.UpdateStatusRequest;
+import id.ac.stis.kotaksaran.entity.User;
+
+import java.util.List;
+
+/**
+ * Interface untuk Service Layer Modul Saran.
+ * Mendefinisikan logika bisnis untuk semua proses kotak saran.
+ */
+public interface SaranService {
+
+    // --- LOGIKA UNTUK MAHASISWA ---
+
+    /**
+     * Membuat saran baru.
+     * @param currentUser Mahasiswa yang sedang login.
+     * @param saranRequest DTO berisi detail saran.
+     * @return DTO SaranResponse dari saran yang baru dibuat.
+     */
+    SaranResponse createSaran(User currentUser, SaranRequest saranRequest);
+
+    /**
+     * Mengambil daftar saran yang dikirim oleh mahasiswa yang sedang login.
+     * @param currentUser Mahasiswa yang sedang login.
+     * @return List dari DTO SaranResponse.
+     */
+    List<SaranResponse> getSaranByCurrentUser(User currentUser);
+
+    // --- LOGIKA UNTUK ADMIN ---
+
+    /**
+     * Mengambil semua saran dari semua mahasiswa (untuk Admin).
+     * @return List dari DTO SaranResponse.
+     */
+    List<SaranResponse> getAllSaran();
+
+    /**
+     * Mengambil satu saran spesifik (untuk Admin).
+     * @param idSaran ID dari saran yang dicari.
+     * @return DTO SaranResponse.
+     */
+    SaranResponse getSaranById(Long idSaran);
+
+    /**
+     * Memberikan tanggapan resmi untuk sebuah saran (untuk Admin).
+     * @param currentUser Admin yang sedang login.
+     * @param idSaran ID dari saran yang akan ditanggapi.
+     * @param tanggapanRequest DTO berisi isi tanggapan.
+     * @return DTO SaranResponse yang sudah ter-update dengan tanggapan.
+     */
+    SaranResponse giveTanggapan(User currentUser, Long idSaran, TanggapanRequest tanggapanRequest);
+
+    /**
+     * Mengubah status sebuah saran (untuk Admin).
+     * @param idSaran ID dari saran yang akan diubah statusnya.
+     * @param updateStatusRequest DTO berisi status baru.
+     * @return DTO SaranResponse yang sudah ter-update.
+     */
+    SaranResponse updateSaranStatus(Long idSaran, UpdateStatusRequest updateStatusRequest);
+}

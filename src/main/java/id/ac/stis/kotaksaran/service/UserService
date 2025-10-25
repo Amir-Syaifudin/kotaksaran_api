@@ -1,0 +1,40 @@
+package id.ac.stis.kotaksaran.service;
+
+import id.ac.stis.kotaksaran.dto.user.ChangePasswordRequest;
+import id.ac.stis.kotaksaran.dto.user.UpdateProfileRequest;
+import id.ac.stis.kotaksaran.dto.user.UserProfile;
+import id.ac.stis.kotaksaran.entity.User;
+
+/**
+ * Interface untuk Service Layer Modul User.
+ * Mendefinisikan logika bisnis untuk manajemen profil.
+ */
+public interface UserService {
+    /**
+     * Mengambil profil user yang sedang login.
+     * @param currentUser User yang sedang login (didapat dari token).
+     * @return DTO UserProfile.
+     */
+    UserProfile getUserProfile(User currentUser);
+
+    /**
+     * Memperbarui profil (nama) user yang sedang login.
+     * @param currentUser User yang sedang login.
+     * @param updateProfileRequest DTO berisi nama baru.
+     * @return DTO UserProfile yang sudah diperbarui.
+     */
+    UserProfile updateUserProfile(User currentUser, UpdateProfileRequest updateProfileRequest);
+
+    /**
+     * Mengganti password user yang sedang login.
+     * @param currentUser User yang sedang login.
+     * @param changePasswordRequest DTO berisi password lama dan baru.
+     */
+    void changePassword(User currentUser, ChangePasswordRequest changePasswordRequest);
+
+    /**
+     * Menghapus akun user yang sedang login.
+     * @param currentUser User yang sedang login.
+     */
+    void deleteUserAccount(User currentUser);
+}
