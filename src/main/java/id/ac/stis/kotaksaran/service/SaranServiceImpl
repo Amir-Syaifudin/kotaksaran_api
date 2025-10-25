@@ -1,4 +1,4 @@
-apackage id.ac.stis.kotaksaran.service.impl;
+package id.ac.stis.kotaksaran.service.impl;
 
 import id.ac.stis.kotaksaran.dto.saran.SaranRequest;
 import id.ac.stis.kotaksaran.dto.saran.SaranResponse;
